@@ -8,9 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showingAddItem = false
+    @ObservedObject var updater = ListUpdater()
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        let addNewItemView = AddView(isPresented: $showingAddItem, listUpdater: updater)
+        
+        NavigationView {
+            List{
+                ForEach(updater.mainItemsList, id: \.id) { item in
+                    Text(item.title)
+                }
+                .onDelete(perform: deleteItem)
+            }
+            .navigationBarTitle("List it to me baby!")
+            .navigationBarItems(leading: EditButton(), trailing: Button("Add") {
+                self.showingAddItem.toggle()
+            })
+            .sheet(isPresented: $showingAddItem, content: {
+                addNewItemView
+            })
+        }
+    }
+    
+    func deleteItem(at offsets: IndexSet) {
+        guard let index = offsets.first else { return }
+        let itemToDelete = updater.mainItemsList[index]
+        itemToDelete.deleteItem()
+        updater.reloadData()
     }
 }
 
