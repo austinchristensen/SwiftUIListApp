@@ -14,34 +14,37 @@ struct DetailView: View {
     let selectedItem: ListItem
     
     var body: some View {
-        NavigationView {
-            Form{
-                Section {
-                    TextField("New Entry", text: $newEntry)
-                    Button("Add Entry") {
-                        itemToModify.detailItems?.append(self.newEntry)
-                        listUpdater.updateCurrentlySelectedItem(updatedItem: itemToModify)
-                        newEntry = ""
-                    }
-                }
-                Text("Entries: ")
-                List{
-                    ForEach(itemToModify.detailItems ?? [], id: \.self) { detailItem in
-                        Text(detailItem)
-                    }
-                    .onDelete(perform: deleteItem)
+        Form{
+            Section {
+                TextField("New Entry", text: $newEntry)
+                Button("Add Entry") {
+                    itemToModify.detailItems?.append(self.newEntry)
+                    listUpdater.updateCurrentlySelectedItem(updatedItem: itemToModify)
+                    newEntry = ""
                 }
             }
-            .navigationBarTitle("\(itemToModify.title) Details")
-            .navigationBarItems(trailing: Button("Save") {
-                self.saveItem()
-            })
-            .onAppear {
-                itemToModify = selectedItem
+            Text("Entries: ")
+            List{
+                ForEach(itemToModify.detailItems ?? [], id: \.self) { detailItem in
+                    Text(detailItem)
+                }
+                .onDelete(perform: deleteItem)
             }
-            .onDisappear {
-                saveItem()
-            }
+        }
+        .navigationBarTitle("Details for: \(itemToModify.title)")
+        .navigationBarItems(trailing:
+                                HStack {
+                                    EditButton()
+                                    Button("Save") {
+                                        self.saveItem()
+                                    }
+                                }
+        )
+        .onAppear {
+            itemToModify = selectedItem
+        }
+        .onDisappear {
+            saveItem()
         }
     }
     
