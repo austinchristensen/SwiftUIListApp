@@ -29,6 +29,7 @@ struct DetailView: View {
                     Text(detailItem)
                 }
                 .onDelete(perform: deleteItem)
+                .onMove(perform: move)
             }
         }
         .navigationBarTitle("Details for: \(itemToModify.title)")
@@ -56,6 +57,12 @@ struct DetailView: View {
     func deleteItem(at offsets: IndexSet) {
         guard let index = offsets.first else { return }
         itemToModify.detailItems?.remove(at: index)
+        listUpdater.reloadData()
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        itemToModify.detailItems?.move(fromOffsets: source, toOffset: destination)
+        itemToModify.saveItem()
         listUpdater.reloadData()
     }
 }

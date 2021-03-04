@@ -22,6 +22,7 @@ struct ContentView: View {
                     }
                 }
                 .onDelete(perform: deleteItem)
+                .onMove(perform: move)
             }
             .navigationBarTitle("List it to me baby!")
             .navigationBarItems(leading: EditButton(), trailing: Button("Add") {
@@ -37,6 +38,17 @@ struct ContentView: View {
         guard let index = offsets.first else { return }
         let itemToDelete = updater.mainItemsList[index]
         itemToDelete.deleteItem()
+        updater.reloadData()
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        updater.mainItemsList.move(fromOffsets: source, toOffset: destination)
+        for item in updater.mainItemsList {
+            var updatedItem = item
+            guard let updatedIndex = updater.mainItemsList.firstIndex(where: {$0.id == item.id} ) else { return }
+            updatedItem.index = updatedIndex
+            updatedItem.saveItem()
+        }
         updater.reloadData()
     }
 }
