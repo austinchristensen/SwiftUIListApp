@@ -17,7 +17,9 @@ struct ContentView: View {
         NavigationView {
             List{
                 ForEach(updater.mainItemsList, id: \.id) { item in
-                    Text(item.title)
+                    NavigationLink(destination: DetailView(listUpdater: updater, selectedItem: item)) {
+                        Text(item.title)
+                    }
                 }
                 .onDelete(perform: deleteItem)
             }
