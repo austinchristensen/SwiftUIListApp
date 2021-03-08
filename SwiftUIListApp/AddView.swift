@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddView: View {
     @Binding var isPresented: Bool
+    @State var showErrorMessage: Bool = false
     @State var title = ""
     @State var newEntry = ""
     @State var newItemToCreate = ListItem(title: "", createdAt: Date(), id: UUID(), index: 0, detailItems: [])
@@ -18,32 +19,42 @@ struct AddView: View {
         NavigationView {
             Form{
                 Section {
-                    TextField("Title", text: $title )
+                    TextField("Title", text: $title)
                     TextField("New Entry", text: $newEntry)
                     Button("Add Entry") {
-                        newItemToCreate.detailItems?.append(self.newEntry)
-                        listUpdater.updateCurrentlySelectedItem(updatedItem: newItemToCreate)
+                        if newEntry != "" {
+                           newItemToCreate.detailItems?.append(newEntry)
+                        }
                         newEntry = ""
                     }
                 }
+                .alert(isPresented: $showErrorMessage) {
+                                    Alert(title: Text("Error"), message: Text("Title is required"), dismissButton: .default(Text("OK")))
+                                }
                 Text("New Entries: ")
                 List{
                     ForEach(newItemToCreate.detailItems ?? [], id: \.self) { entry in
                         Text(entry)
                     }
                     .onDelete(perform: deleteItem)
+                    .onMove(perform: move)
                 }
             }
             .navigationBarTitle("New List")
-            .navigationBarItems(trailing: Button("Save") {
-                saveItem()
-            })
+            .navigationBarItems(trailing:
+                                    HStack{
+                                        EditButton()
+                                        Button("Save") {
+                                            saveItem()
+                                        }
+                                    }
+            )
         }
     }
     
     func saveItem() {
         guard title != "" else {
-            isPresented = false
+            showErrorMessage.toggle()
             return
         }
         
@@ -59,5 +70,9 @@ struct AddView: View {
     func deleteItem(at offsets: IndexSet) {
         guard let index = offsets.first else { return }
         newItemToCreate.detailItems?.remove(at: index)
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        newItemToCreate.detailItems?.move(fromOffsets: source, toOffset: destination)
     }
 }
