@@ -17,22 +17,22 @@ struct AddView: View {
     
     var body: some View {
         NavigationView {
-            Form{
+            Form {
                 Section {
                     TextField("Title", text: $title)
                     TextField("New Entry", text: $newEntry)
                     Button("Add Entry") {
                         if newEntry != "" {
-                           newItemToCreate.detailItems?.append(newEntry)
+                            newItemToCreate.detailItems?.append(newEntry)
                         }
                         newEntry = ""
                     }
                 }
                 .alert(isPresented: $showErrorMessage) {
-                                    Alert(title: Text("Error"), message: Text("Title is required"), dismissButton: .default(Text("OK")))
-                                }
-                Text("New Entries: ")
-                List{
+                    Alert(title: Text("Error"), message: Text("Title is required"), dismissButton: .default(Text("OK")))
+                }
+                Text("New Entries:")
+                List {
                     ForEach(newItemToCreate.detailItems ?? [], id: \.self) { entry in
                         Text(entry)
                     }
@@ -42,7 +42,7 @@ struct AddView: View {
             }
             .navigationBarTitle("New List")
             .navigationBarItems(trailing:
-                                    HStack{
+                                    HStack {
                                         EditButton()
                                         Button("Save") {
                                             saveItem()
