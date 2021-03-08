@@ -34,14 +34,14 @@ struct ContentView: View {
         }
     }
     
-    func deleteItem(at offsets: IndexSet) {
+    private func deleteItem(at offsets: IndexSet) {
         guard let index = offsets.first else { return }
         let itemToDelete = updater.mainItemsList[index]
         itemToDelete.deleteItem()
         updater.reloadData()
     }
     
-    func move(from source: IndexSet, to destination: Int) {
+    private func move(from source: IndexSet, to destination: Int) {
         updater.mainItemsList.move(fromOffsets: source, toOffset: destination)
         for item in updater.mainItemsList {
             var updatedItem = item

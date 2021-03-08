@@ -15,7 +15,6 @@ class ListUpdater: ObservableObject {
         mainItemsList = DataManager.loadAll(ListItem.self).sorted(by: {
             $0.index < $1.index
         })
-        print("on init: count =  \(mainItemsList.count)")
     }
     
     public func updateCurrentlySelectedItem(updatedItem: ListItem) {
@@ -26,6 +25,5 @@ class ListUpdater: ObservableObject {
         mainItemsList = DataManager.loadAll(ListItem.self).sorted(by: {
             $0.index < $1.index
         })
-        print("on reloadData: count = \(mainItemsList.count)")
     }
 }

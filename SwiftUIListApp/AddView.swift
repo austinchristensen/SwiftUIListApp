@@ -9,11 +9,12 @@ import SwiftUI
 
 struct AddView: View {
     @Binding var isPresented: Bool
-    @State var showErrorMessage: Bool = false
-    @State var title = ""
-    @State var newEntry = ""
-    @State var newItemToCreate = ListItem(title: "", createdAt: Date(), id: UUID(), index: 0, detailItems: [])
     @ObservedObject var listUpdater: ListUpdater
+    
+    @State private var showErrorMessage: Bool = false
+    @State private var title = ""
+    @State private var newEntry = ""
+    @State private var newItemToCreate = ListItem(title: "", createdAt: Date(), id: UUID(), index: 0, detailItems: [])
     
     var body: some View {
         NavigationView {
@@ -50,7 +51,7 @@ struct AddView: View {
         }
     }
     
-    func saveItem() {
+    private func saveItem() {
         guard title != "" else {
             showErrorMessage.toggle()
             return
@@ -65,12 +66,12 @@ struct AddView: View {
         isPresented = false
     }
     
-    func deleteItem(at offsets: IndexSet) {
+    private func deleteItem(at offsets: IndexSet) {
         guard let index = offsets.first else { return }
         newItemToCreate.detailItems?.remove(at: index)
     }
     
-    func move(from source: IndexSet, to destination: Int) {
+    private func move(from source: IndexSet, to destination: Int) {
         newItemToCreate.detailItems?.move(fromOffsets: source, toOffset: destination)
     }
 }
