@@ -33,22 +33,20 @@ struct AddView: View {
                 }
                 Text("New Entries:")
                 List {
-                    ForEach(newItemToCreate.detailItems ?? [], id: \.self) { entry in
-                        Text(entry)
+                    ForEach(newItemToCreate.detailItems ?? [], id: \.self) { detailItem in
+                        Text(detailItem)
                     }
                     .onDelete(perform: deleteItem)
                     .onMove(perform: move)
                 }
             }
             .navigationBarTitle("New List")
-            .navigationBarItems(trailing:
-                                    HStack {
-                                        EditButton()
-                                        Button("Save") {
-                                            saveItem()
-                                        }
-                                    }
-            )
+            .navigationBarItems(trailing: HStack {
+                EditButton()
+                Button("Save") {
+                    saveItem()
+                }
+            })
         }
     }
     

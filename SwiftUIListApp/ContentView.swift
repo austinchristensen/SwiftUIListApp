@@ -15,7 +15,7 @@ struct ContentView: View {
         let addNewItemView = AddView(isPresented: $showingAddItem, listUpdater: updater)
         
         NavigationView {
-            List{
+            List {
                 ForEach(updater.mainItemsList, id: \.id) { item in
                     NavigationLink(destination: DetailView(listUpdater: updater, selectedItem: item)) {
                         Text(item.title)
