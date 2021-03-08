@@ -28,9 +28,6 @@ struct DetailView: View {
         }
     }) {
         HStack {
-            Image("ic_back")
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(.white)
             Text("Back")
         }
     }}
