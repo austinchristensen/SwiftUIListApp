@@ -16,24 +16,22 @@ struct AddView: View {
     
     var body: some View {
         NavigationView {
-            VStack{
-                Form{
-                    Section {
-                        TextField("Title", text: $title )
-                        TextField("New Entry", text: $newEntry)
-                        Button("Add Entry") {
-                            newItemToCreate.detailItems?.append(self.newEntry)
-                            listUpdater.updateCurrentlySelectedItem(updatedItem: newItemToCreate)
-                            newEntry = ""
-                        }
+            Form{
+                Section {
+                    TextField("Title", text: $title )
+                    TextField("New Entry", text: $newEntry)
+                    Button("Add Entry") {
+                        newItemToCreate.detailItems?.append(self.newEntry)
+                        listUpdater.updateCurrentlySelectedItem(updatedItem: newItemToCreate)
+                        newEntry = ""
                     }
-                    Text("New Entries: ")
-                    List{
-                        ForEach(newItemToCreate.detailItems ?? [], id: \.self) { entry in
-                            Text(entry)
-                        }
-                        .onDelete(perform: deleteItem)
+                }
+                Text("New Entries: ")
+                List{
+                    ForEach(newItemToCreate.detailItems ?? [], id: \.self) { entry in
+                        Text(entry)
                     }
+                    .onDelete(perform: deleteItem)
                 }
             }
             .navigationBarTitle("New List")
@@ -41,10 +39,6 @@ struct AddView: View {
                 saveItem()
             })
         }
-    }
-    
-    func updateItem() {
-        
     }
     
     func saveItem() {
