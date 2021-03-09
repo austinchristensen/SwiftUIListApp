@@ -10,17 +10,17 @@ import Foundation
 public class DataManager {
     
     // Get document directory
-    static fileprivate func getDocumentDirectory() -> URL {
-        if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            return url
-        } else {
-            fatalError("Unable to access document directory")
+    static fileprivate func getDocumentDirectory() -> URL? {
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            NSLog(DataManagerErrors.UnableToAccessDocumentDirectory.localizedDescription)
+            return nil
         }
+        return url
     }
     
     // Save any kind of codable object
     static func save <T: Encodable> (_ object: T, with fileName: String) {
-        let url = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
+        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return }
         
         let encoder = JSONEncoder()
         
@@ -33,16 +33,16 @@ public class DataManager {
             
             FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
         } catch {
-            fatalError(error.localizedDescription)
+            NSLog(error.localizedDescription)
         }
     }
     
     // Load any kind of codeable object
-    static func load <T: Decodable> (_ fileName: String, with type: T.Type) -> T {
-        let url = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
+    static func load <T: Decodable> (_ fileName: String, with type: T.Type) -> T? {
+        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return nil }
         
         if !FileManager.default.fileExists(atPath: url.path) {
-            fatalError("File not found at path: \(url.path)")
+            NSLog("\(DataManagerErrors.FileNotFoundAtPath.localizedDescription): \(url.path)")
         }
         
         if let data = FileManager.default.contents(atPath: url.path) {
@@ -50,39 +50,45 @@ public class DataManager {
                 let model = try JSONDecoder().decode(type, from: data)
                 return model
             } catch {
-                fatalError(error.localizedDescription)
+                NSLog(error.localizedDescription)
+                return nil
             }
         } else {
-            fatalError("Data unavailable at path: \(url.path)")
+            NSLog("\(DataManagerErrors.DataNotFoundAtPath.localizedDescription): \(url.path)")
+            return nil
         }
     }
     
     // Load all files from a directory
-    static func loadAll <T: Decodable> (_ type: T.Type) -> [T] {
+    static func loadAll <T: Decodable> (_ type: T.Type) -> [T]? {
+        guard let path = getDocumentDirectory()?.path else { return nil }
+        
         do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: getDocumentDirectory().path)
+            let files = try FileManager.default.contentsOfDirectory(atPath: path)
             
             var modelObjects = [T]()
             
             for fileName in files {
-                modelObjects.append(load(fileName, with: type))
+                guard let modelObject = load(fileName, with: type) else { return nil }
+                modelObjects.append(modelObject)
             }
             
             return modelObjects
         } catch {
-            fatalError("Could not load any files")
+            NSLog(DataManagerErrors.UnableToLoadAnyFiles.localizedDescription)
+            return nil
         }
     }
     
     // Delete a file
     static func delete (_ fileName: String) {
-        let url = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
+        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return }
         
         if FileManager.default.fileExists(atPath: url.path) {
             do {
                 try FileManager.default.removeItem(at: url)
             } catch {
-                fatalError(error.localizedDescription)
+                NSLog(error.localizedDescription)
             }
         }
     }

@@ -16,6 +16,7 @@
 		433E46DB25F02C3E00539C85 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E46DA25F02C3E00539C85 /* AddView.swift */; };
 		433E46DE25F04C5800539C85 /* ListUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E46DD25F04C5800539C85 /* ListUpdater.swift */; };
 		43C0B84F25F165A000CB434C /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C0B84E25F165A000CB434C /* DetailView.swift */; };
+		43C0B85525F827A000CB434C /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C0B85425F827A000CB434C /* ErrorHandling.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		433E46DA25F02C3E00539C85 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		433E46DD25F04C5800539C85 /* ListUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUpdater.swift; sourceTree = "<group>"; };
 		43C0B84E25F165A000CB434C /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		43C0B85425F827A000CB434C /* ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				433E46DA25F02C3E00539C85 /* AddView.swift */,
 				433E46DD25F04C5800539C85 /* ListUpdater.swift */,
 				43C0B84E25F165A000CB434C /* DetailView.swift */,
+				43C0B85425F827A000CB434C /* ErrorHandling.swift */,
 			);
 			path = SwiftUIListApp;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 				433E46DB25F02C3E00539C85 /* AddView.swift in Sources */,
 				43C0B84F25F165A000CB434C /* DetailView.swift in Sources */,
 				433E46DE25F04C5800539C85 /* ListUpdater.swift in Sources */,
+				43C0B85525F827A000CB434C /* ErrorHandling.swift in Sources */,
 				433E46D125F00B8C00539C85 /* DataManager.swift in Sources */,
 				433E46C025F0064800539C85 /* SwiftUIListApp.swift in Sources */,
 			);
