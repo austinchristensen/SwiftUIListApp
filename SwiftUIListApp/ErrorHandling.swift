@@ -8,7 +8,7 @@
 import Foundation
 
 public enum DataManagerErrors: Error {
-    case UnableToAccessDocumentDirectory
+    case UnableToAccessDirectory
     case FileNotFoundAtPath
     case DataNotFoundAtPath
     case UnableToLoadAnyFiles

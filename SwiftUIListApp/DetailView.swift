@@ -16,7 +16,7 @@ struct DetailView: View {
     @State private var showErrorMessage: Bool = false
     @State private var hasSaved: Bool = false
     @State private var newEntry = ""
-    @State private var itemToModify = ListItem(title: "", createdAt: Date(), id: UUID(), index: 0, detailItems: [])
+    @State private var itemToModify = ListItem(title: "", id: UUID(), index: 0, detailItems: [])
     
     private var backButton : some View { Button(action: {
         if (selectedItem.detailItems == itemToModify.detailItems) {

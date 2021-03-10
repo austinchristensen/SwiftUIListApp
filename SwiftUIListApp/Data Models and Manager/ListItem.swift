@@ -7,18 +7,17 @@
 
 import Foundation
 
-struct ListItem : Codable, Identifiable {
+struct ListItem : Codable {
     var title: String
-    var createdAt: Date
     var id: UUID
     var index: Int
     var detailItems: [String]?
     
     func saveItem() {
-        DataManager.save(self, with: id.uuidString)
+        DataManager.save(object: self, name: id.uuidString)
     }
     
     func deleteItem() {
-        DataManager.delete(id.uuidString)
+        DataManager.delete(name: id.uuidString)
     }
 }

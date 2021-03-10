@@ -14,7 +14,7 @@ struct AddView: View {
     @State private var showErrorMessage: Bool = false
     @State private var title = ""
     @State private var newEntry = ""
-    @State private var newItemToCreate = ListItem(title: "", createdAt: Date(), id: UUID(), index: 0, detailItems: [])
+    @State private var newItemToCreate = ListItem(title: "", id: UUID(), index: 0, detailItems: [])
     
     var body: some View {
         NavigationView {

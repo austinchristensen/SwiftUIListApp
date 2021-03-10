@@ -9,23 +9,66 @@ import Foundation
 
 public class DataManager {
     
-    // Get document directory
-    static fileprivate func getDocumentDirectory() -> URL? {
-        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            NSLog(DataManagerErrors.UnableToAccessDocumentDirectory.localizedDescription)
+    static private func getDirectoryURL(path: String? = nil) -> URL? {
+        guard let baseUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to get directory URL")
             return nil
         }
-        return url
+        
+        guard let pathToAppend = path else {
+            return baseUrl
+        }
+        
+        return baseUrl.appendingPathComponent(pathToAppend, isDirectory: false)
     }
     
-    // Save any kind of codable object
-    static func save <T: Encodable> (_ object: T, with fileName: String) {
-        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return }
+    static private func load <T: Decodable> (name: String, type: T.Type) -> T? {
+        guard let url = getDirectoryURL(path: name) else { return nil }
         
-        let encoder = JSONEncoder()
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            print("No file at path: \(url.path)")
+            return nil
+        }
+        
+        guard let file = FileManager.default.contents(atPath: url.path) else {
+            print("Could not find data for path: \(url.path)")
+            return nil
+        }
         
         do {
-            let data = try encoder.encode(object)
+            let object = try JSONDecoder().decode(type, from: file)
+            return object
+        } catch {
+            NSLog(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    static func loadAll <T: Decodable> (type: T.Type) -> [T]? {
+        guard let path = getDirectoryURL()?.path else { return nil }
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: path)
+            
+            var objects = [T]()
+            
+            files.forEach { file in
+                guard let object = load(name: file, type: type) else { return }
+                objects.append(object)
+            }
+            
+            return objects
+        } catch {
+            print("Could not find any files in path: \(path)")
+            return nil
+        }
+    }
+    
+    static func save <T: Encodable> (object: T, name: String) {
+        guard let url = getDirectoryURL(path: name) else { return }
+        
+        do {
+            let data = try JSONEncoder().encode(object)
             
             if FileManager.default.fileExists(atPath: url.path) {
                 try FileManager.default.removeItem(at: url)
@@ -37,59 +80,16 @@ public class DataManager {
         }
     }
     
-    // Load any kind of codeable object
-    static func load <T: Decodable> (_ fileName: String, with type: T.Type) -> T? {
-        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return nil }
-        
-        if !FileManager.default.fileExists(atPath: url.path) {
-            NSLog("\(DataManagerErrors.FileNotFoundAtPath.localizedDescription): \(url.path)")
+    static func delete (name: String) {
+        guard let url = getDirectoryURL(path: name), FileManager.default.fileExists(atPath: url.path) else {
+            print("Cannot delete, no file found")
+            return
         }
-        
-        if let data = FileManager.default.contents(atPath: url.path) {
-            do {
-                let model = try JSONDecoder().decode(type, from: data)
-                return model
-            } catch {
-                NSLog(error.localizedDescription)
-                return nil
-            }
-        } else {
-            NSLog("\(DataManagerErrors.DataNotFoundAtPath.localizedDescription): \(url.path)")
-            return nil
-        }
-    }
-    
-    // Load all files from a directory
-    static func loadAll <T: Decodable> (_ type: T.Type) -> [T]? {
-        guard let path = getDocumentDirectory()?.path else { return nil }
         
         do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: path)
-            
-            var modelObjects = [T]()
-            
-            for fileName in files {
-                guard let modelObject = load(fileName, with: type) else { return nil }
-                modelObjects.append(modelObject)
-            }
-            
-            return modelObjects
+            try FileManager.default.removeItem(at: url)
         } catch {
-            NSLog(DataManagerErrors.UnableToLoadAnyFiles.localizedDescription)
-            return nil
-        }
-    }
-    
-    // Delete a file
-    static func delete (_ fileName: String) {
-        guard let url = getDocumentDirectory()?.appendingPathComponent(fileName, isDirectory: false) else { return }
-        
-        if FileManager.default.fileExists(atPath: url.path) {
-            do {
-                try FileManager.default.removeItem(at: url)
-            } catch {
-                NSLog(error.localizedDescription)
-            }
+            NSLog(error.localizedDescription)
         }
     }
 }

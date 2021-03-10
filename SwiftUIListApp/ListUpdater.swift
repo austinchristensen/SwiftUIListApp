@@ -12,7 +12,7 @@ class ListUpdater: ObservableObject {
     @Published var currentlySelectedItem: ListItem?
     
     init() {
-        mainItemsList = DataManager.loadAll(ListItem.self)?.sorted(by: {
+        mainItemsList = DataManager.loadAll(type: ListItem.self)?.sorted(by: {
             $0.index < $1.index
         }) ?? []
     }
@@ -22,7 +22,7 @@ class ListUpdater: ObservableObject {
     }
     
     public func reloadData() {
-        mainItemsList = DataManager.loadAll(ListItem.self)?.sorted(by: {
+        mainItemsList = DataManager.loadAll(type: ListItem.self)?.sorted(by: {
             $0.index < $1.index
         }) ?? []
     }
